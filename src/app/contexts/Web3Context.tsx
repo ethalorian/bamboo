@@ -2,15 +2,14 @@
 
 import { createContext, useContext, useState } from 'react'
 import { web3Onboard } from '../config/web3'
-import { ERC725 } from '@erc725/smart-contracts/build/artifacts/ERC725.json';
 import { ethers } from 'ethers'
-import { UniversalProfile } from '@lukso/lsp-smart-contracts';
+import { LSP0ERC725Account, ERC725 } from '@lukso/lsp-smart-contracts'
 
 interface Web3ContextType {
   account: string | null
   connect: () => Promise<void>
   disconnect: () => Promise<void>
-  universalProfile: any | null
+  universalProfile: LSP0ERC725Account | null
   isConnecting: boolean
 }
 
@@ -21,15 +20,15 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
   const [universalProfile, setUniversalProfile] = useState<any | null>(null)
   const [isConnecting, setIsConnecting] = useState(false)
 
-  const initializeUniversalProfile = async (address: string, provider: any) => {
+  const initializeUniversalProfile = async (address: string, provider: any): Promise<LSP0ERC725Account | null> => {
     try {
       const ethersProvider = new ethers.providers.Web3Provider(provider)
       const signer = ethersProvider.getSigner()
       
       // Initialize UniversalProfile contract instance
-      const upContract = new UniversalProfile(
+      const upContract = new LSP0ERC725Account(
         address,
-        signer
+        signer as any
       )
 
       return upContract
