@@ -1,3 +1,4 @@
+import { Web3Provider } from './contexts/Web3Context'
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -20,15 +21,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+      </head>
+      <body className="bg-transparent overflow-hidden">
+        <Web3Provider>
+          {children}
+        </Web3Provider>
       </body>
     </html>
   );
